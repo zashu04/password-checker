@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PassGuard — Password Strength Checker</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <span class="logo-icon">🔒</span>
+      <span class="logo-text">PassGuard</span>
+    </div>
+    <p class="tagline">Password Strength Analyzer &amp; Generator</p>
+  </header>
+
+  <main>
+
+    <!-- ===== CHECKER SECTION ===== -->
+    <section class="card" id="checker-card">
+      <div class="card-header">
+        <span class="card-icon">🔍</span>
+        <h2>Check Your Password</h2>
+      </div>
+
+      <div class="input-wrapper">
+        <input
+          type="password"
+          id="password-input"
+          class="password-field"
+          placeholder="Type your password here..."
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <button class="icon-btn" id="toggle-visibility" title="Show/Hide password">
+          <span id="eye-icon">👁</span>
+        </button>
+        <button class="icon-btn" id="copy-input-btn" title="Copy password">
+          <span>📋</span>
+        </button>
+      </div>
+
+      <!-- Strength Meter -->
+      <div class="strength-section" id="strength-section" style="display:none;">
+        <div class="strength-bar-track">
+          <div class="strength-bar-fill" id="strength-bar"></div>
+        </div>
+        <div class="strength-meta">
+          <span class="strength-label" id="strength-label">—</span>
+          <span class="entropy-badge" id="entropy-badge">entropy: —</span>
+        </div>
+
+        <!-- Warning banner for common passwords -->
+        <div class="common-warning" id="common-warning" style="display:none;">
+          ⚠️ This is a commonly known password. Do <strong>not</strong> use it!
+        </div>
+
+        <!-- Checklist -->
+        <div class="checklist" id="checklist">
+          <div class="check-item" id="chk-length_8">
+            <span class="check-dot"></span> At least 8 characters
+          </div>
+          <div class="check-item" id="chk-length_12">
+            <span class="check-dot"></span> At least 12 characters
+          </div>
+          <div class="check-item" id="chk-length_16">
+            <span class="check-dot"></span> At least 16 characters
+          </div>
+          <div class="check-item" id="chk-has_lower">
+            <span class="check-dot"></span> Lowercase letters (a–z)
+          </div>
+          <div class="check-item" id="chk-has_upper">
+            <span class="check-dot"></span> Uppercase letters (A–Z)
+          </div>
+          <div class="check-item" id="chk-has_digit">
+            <span class="check-dot"></span> Numbers (0–9)
+          </div>
+          <div class="check-item" id="chk-has_symbol">
+            <span class="check-dot"></span> Special characters (!@#$…)
+          </div>
+          <div class="check-item" id="chk-no_repeating">
+            <span class="check-dot"></span> No repeating characters
+          </div>
+          <div class="check-item" id="chk-no_sequential">
+            <span class="check-dot"></span> No sequential patterns (123, abc)
+          </div>
+        </div>
+
+        <!-- Feedback tips -->
+        <div class="feedback-list" id="feedback-list"></div>
+      </div>
+    </section>
+
+    <!-- ===== GENERATOR SECTION ===== -->
+    <section class="card" id="generator-card">
+      <div class="card-header">
+        <span class="card-icon">⚡</span>
+        <h2>Generate Strong Password</h2>
+      </div>
+
+      <div class="generator-options">
+
+        <div class="option-row">
+          <label for="length-slider">Length: <strong id="length-display">16</strong></label>
+          <input type="range" id="length-slider" min="4" max="64" value="16" />
+        </div>
+
+        <div class="toggle-grid">
+          <label class="toggle-label">
+            <input type="checkbox" id="opt-upper" checked />
+            <span class="toggle-track"></span>
+            Uppercase (A–Z)
+          </label>
+          <label class="toggle-label">
+            <input type="checkbox" id="opt-lower" checked />
+            <span class="toggle-track"></span>
+            Lowercase (a–z)
+          </label>
+          <label class="toggle-label">
+            <input type="checkbox" id="opt-digits" checked />
+            <span class="toggle-track"></span>
+            Numbers (0–9)
+          </label>
+          <label class="toggle-label">
+            <input type="checkbox" id="opt-symbols" checked />
+            <span class="toggle-track"></span>
+            Symbols (!@#$…)
+          </label>
+        </div>
+
+        <button class="btn-generate" id="generate-btn">
+          <span>⚡ Generate Password</span>
+        </button>
+      </div>
+
+      <!-- Generated password output -->
+      <div class="generated-output" id="generated-output" style="display:none;">
+        <div class="generated-password-row">
+          <span class="generated-password mono" id="generated-password"></span>
+          <button class="icon-btn copy-btn" id="copy-generated-btn" title="Copy">📋</button>
+        </div>
+        <div class="gen-strength-row">
+          <div class="gen-strength-bar-track">
+            <div class="gen-strength-bar-fill" id="gen-strength-bar"></div>
+          </div>
+          <span class="gen-strength-label" id="gen-strength-label"></span>
+        </div>
+        <div class="copy-toast" id="gen-copy-toast">Copied!</div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>Built with Python &amp; Flask &nbsp;·&nbsp; <span class="footer-highlight">PassGuard</span> v1.0</p>
+  </footer>
+
+  <div class="copy-toast" id="copy-toast">Copied!</div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
